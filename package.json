@@ -4,8 +4,9 @@
   "description": "Proyecto de marketplace para hackathon de Globant y Factoría F5",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node ./build/index.js",
+    "dev": "nodemon ./src/index.ts",
+    "build": "tsc-p ."
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/AleDataAnalyst/techtradersbackend#readme",
   "dependencies": {
+    "@types/express": "^4.17.21",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
