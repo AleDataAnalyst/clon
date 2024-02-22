@@ -5,7 +5,7 @@ import path from 'path';: Importa el módulo Path, que proporciona utilidades pa
 import db from "./database/db.js";: Importa la configuración de la base de datos desde el archivo db.js.
 import UserModel from '../models/UserModel.ts';: Importa el modelo de usuario desde el archivo UserModel.ts.
 import ProductModel from '../models/productModel.ts';: Importa el modelo de producto desde el archivo productModel.ts.
-import userRouter from './routes/userRouter';: Importa el router de usuario desde el archivo userRouter.
+import userRouter from './routes/users/userRouter';: Importa el router de usuario desde el archivo userRouter.
 import productRouter from './routes/productRouter';: Importa el router de producto desde el archivo productRouter.
 import loginRouter from './routes/loginRouter';: Importa el router de inicio de sesión desde el archivo loginRouter.
 const app = express();: Crea una nueva aplicación Express.

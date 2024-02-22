@@ -25,6 +25,8 @@ User.init(
     },
     username: {
       type: DataTypes.STRING(30),
+      required: true,
+      unique: true,
       allowNull: false,
     },
     email: {
@@ -34,6 +36,7 @@ User.init(
     pass: {
       type: DataTypes.STRING(30),
       allowNull: false,
+      required: true,
     },
     user_status: {
       type: DataTypes.BOOLEAN,
