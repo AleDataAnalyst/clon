@@ -2,26 +2,34 @@
 import express from 'express';
 import cors from 'cors';
 import mysql from 'mysql2';
+import path from 'path';
 // Importar base de datos
 import db from "./database/db.ts"
-// Importar models
-import User from '../models/userModel.ts';
-import Product from '../models/productModel.ts';
-import Cart from '../models/cartModel.ts';
-import Order from '../models/orderModel.ts';
 // Importar routes
 import userRouter from './routes/userRouter';
 import productRouter from './routes/productRouter';
 import cartRouter from './routes/cartRouter';
 import registerRouter from './routes/registerRouter';
 import loginRouter from './routes/loginRouter';
-import path from 'path';
 
 // Nueva aplicación Express
 const app = express();
 
 // Middleware CORS para permitir solicitudes de origen cruzado
 app.use(cors());
+
+// Parseamos el cuerpo de las solicitudes entrantes en un formato JSON
+app.use(express.json());
+
+// Parseamos el cuerpo de las solicitudes entrantes con pares clave-valor codificados en url
+app.use(express.urlencoded({ extended: true }));
+
+try {
+    await db.authenticate()
+    console.log('Conexión exitosa a la DB')
+} catch (error) {
+    console.log(`El error de conexión es: ${error}`)
+}
 
 // Ruta principal
 app.get('/', [
@@ -37,31 +45,6 @@ app.use('/routes/cart', cartRouter);
 app.use('/routes/order', orderRouter);
 app.use('/routes/register', registerRouter);
 app.use('/routes/login', loginRouter);
-
-try {
-    await db.authenticate()
-    console.log('Conexión exitosa a la DB')
-} catch (error) {
-    console.log(`El error de conexión es: ${error}`)
-}
-
-// Parseamos el cuerpo de las solicitudes entrantes en un formato JSON
-app.use(express.json());
-
-// Parseamos el cuerpo de las solicitudes entrantes con pares clave-valor codificados en url
-app.use(express.urlencoded({ extended: true }));
-
-// Servimos archivos estáticos desde la carpeta 'public'
-app.use('/static', express.static(path.join(__dirname, 'public')));
-
-// Configuramos el motor de vistas y la carpeta de vistas
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
-
-// Sincronizamos todos los modelos con la base de datos
-(async () => {
-    await db.sequelize.sync();
-})();
 
 // Middleware para registrar la fecha de la solicitud
 app.use((req, res, next) => {
@@ -106,6 +89,18 @@ app.use(errorHandlerMiddleware);
 // Conectar a MySQL. 
 const connection = mysql.createConnection({host: 'localhost', user: 'root', password: '', database: 'nombrebd'});
 connection.connect();
+
+// Servimos archivos estáticos desde la carpeta 'public'
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
+// Configuramos el motor de vistas y la carpeta de vistas
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+// Sincronizamos todos los modelos con la base de datos
+(async () => {
+    await db.sequelize.sync();
+})();
 
 // Iniciamos el servidor en el puerto 8000
 app.listen(8000, () => console.log("SERVER STARTED"));
